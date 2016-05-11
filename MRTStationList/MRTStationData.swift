@@ -31,15 +31,14 @@ struct MRTLines {
 }
 
 struct MRTStationManager{
-    var stations: [MRTStation]
     var lines: [(String,[MRTStation])]
     init(contentsOfFile path: String) {
         do {
             let jsonString = try String(contentsOfFile: path)
-            self.stations = Mapper<MRTStation>().mapArray(jsonString)!
+            let stations = Mapper<MRTStation>().mapArray(jsonString)!
             var tempLines: [(String,[MRTStation])] = []
             for line in MRTLines.names {
-                let temp = self.stations.filter({ station -> Bool in
+                let temp = stations.filter({ station -> Bool in
                     return Array(station.lines!.keys).contains(line)
                 })
                 tempLines.append((line,temp))
@@ -48,7 +47,6 @@ struct MRTStationManager{
         }
         catch let error as NSError {
             print("Error: \(error)")
-            self.stations = []
             self.lines = []
 
         }
